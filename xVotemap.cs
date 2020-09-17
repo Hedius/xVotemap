@@ -153,6 +153,9 @@ namespace PRoConEvents
 
         private enumBoolYesNo displayvotescount = enumBoolYesNo.Yes;
 
+        // Logging to EventLogger
+        private enumBoolYesNo logToEventLogger = enumBoolYesNo.No;
+
         //Addon - block spectator - src: AdKats
         public enum PlayerType
         {
@@ -426,7 +429,7 @@ namespace PRoConEvents
 
         public string GetPluginVersion()
         {
-            return "1.5.8.0";
+            return "1.5.8.1";
         }
 
         public string GetPluginAuthor()
@@ -566,6 +569,11 @@ namespace PRoConEvents
         <blockquote> 
         <h4>Debug Level</h4>Integer between 0 and 5, where 0 outputs no plugin debug messages, and 5 which outputs even the most mundane steps.
         </blockquote>
+
+        <blockquote> 
+        <h4>Log to EventLogger</h4>Boolean: Log to EventLogger
+        </blockquote>
+
 
         <h2>Development</h2><br>
         
@@ -840,6 +848,7 @@ namespace PRoConEvents
             lstReturn.Add(new CPluginVariable("Xtras|Vip list", typeof(string[]), this.vips.ToArray()));
             lstReturn.Add(new CPluginVariable("Xtras|Sync ServerVIPs/ReservedSlots", typeof(enumBoolYesNo), this.syncreservedslots));
             lstReturn.Add(new CPluginVariable("Xtras|VIP Vote Count", vipvotecount.GetType(), vipvotecount));
+            lstReturn.Add(new CPluginVariable("Xtras|Log to EventLogger?", logToEventLogger.GetType(), logToEventLogger));
 
             lstReturn.Add(new CPluginVariable("Xtras|Check for Update?", this.Check4Update.GetType(), this.Check4Update));
 
@@ -889,6 +898,8 @@ namespace PRoConEvents
             lstReturn.Add(new CPluginVariable("Vip list", typeof(string[]), this.vips.ToArray()));
             lstReturn.Add(new CPluginVariable("Sync ServerVIPs/ReservedSlots", typeof(enumBoolYesNo), this.syncreservedslots));
             lstReturn.Add(new CPluginVariable("VIP Vote Count", vipvotecount.GetType(), vipvotecount));
+            lstReturn.Add(new CPluginVariable("Log to EventLogger?", logToEventLogger.GetType(), logToEventLogger));
+
 
             lstReturn.Add(new CPluginVariable("Check for Update?", this.Check4Update.GetType(), this.Check4Update));
 
@@ -1113,6 +1124,12 @@ namespace PRoConEvents
             {
                 this.displayvotescount = (enumBoolYesNo)Enum.Parse(typeof(enumBoolYesNo), strValue);
             }
+            else if (strVariable.CompareTo("Log to EventLogger?") == 0 && Enum.IsDefined(typeof(enumBoolYesNo), strValue) == true)
+            {
+                this.logToEventLogger = (enumBoolYesNo)Enum.Parse(typeof(enumBoolYesNo), strValue);
+            }
+
+
 
         }
 
