@@ -1285,34 +1285,61 @@ namespace PRoConEvents
 
         private void UpdateCheck()
         {
-            if (Check4Update == enumBoolYesNo.Yes)
+            if (Check4Update != enumBoolYesNo.Yes)
             {
-                try
+                return;
+            }
+
+            DateTime updatehelper = lastupdatecheck.AddHours(3);
+            if (DateTime.Compare(updatehelper, DateTime.Now) > 0){
+                return;
+            }
+
+            String latestVersion = "Unknown - Request failed!";
+
+            try
+            {
+                WebClient wc = new WebClient();
+                String response = client.DownloadString("https://gitlab.com/e4gl/xVotemap/-/raw/master/version.json");
+                Hashtable json = (Hashtable)JSON.JsonDecode(response);
+
+
+                if (json == null)
                 {
-                    DateTime updatehelper = lastupdatecheck.AddHours(3);
-                    if (DateTime.Compare(updatehelper, DateTime.Now) <= 0)
-                    {
-                        WebClient wc = new WebClient();
-                        string latestversion = wc.DownloadString("https://forum.myrcon.com/showthread.php?6524");
+                    this.ExecuteCommand("procon.protected.pluginconsole.write",
+                                        "Update check failed - gitlab.com/e4gl/xVotemap is private! Please contact the maintainer!");
 
-                        latestversion = latestversion.Substring(latestversion.IndexOf("<title>") + 7);
-                        latestversion = latestversion.Substring(0, latestversion.IndexOf("</title>"));
-                        latestversion = latestversion.Substring(latestversion.IndexOf("xVotemap") + 9);
-
-                        if (GetPluginVersion() != latestversion)
-                        {
-                            this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: ^b^2UPDATE " + latestversion + " AVAILABLE");
-                            this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: your version: " + GetPluginVersion());
-                            this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: latest version " + latestversion);
-                        }
-                        lastupdatecheck = DateTime.Now;
-                    }
+                    return;
                 }
-                catch (Exception ex)
+
+                if (json.ContainsKey("latest_version"))
                 {
-                    this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: ERROR checking for Update: " + ex);
+                    latestVersion = (String)json["latest_version"];
+                }
+                else
+                {
+                    this.ExecuteCommand("procon.protected.pluginconsole.write",
+                                        "Update check failed - Cannot extract latest version! Please contact the maintainer!");
+                    return;
                 }
             }
+            catch (Exception e)
+            {
+                this.ExecuteCommand("procon.protected.pluginconsole.write",
+                                    "Unable to check for plugin updates!");
+                this.ExecuteCommand("procon.protected.pluginconsole.write",
+                                    "Make sure that the plugin does not run in sandbox mode!");
+                return;
+            }
+
+
+            if (GetPluginVersion().CompareTo(GetPluginVersion()) != 0)
+            {
+                this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: ^b^2UPDATE " + latestversion + " AVAILABLE");
+                this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: your version: " + GetPluginVersion());
+                this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: latest version " + latestversion);
+            }
+            lastupdatecheck = DateTime.Now;
         }
 
         public void OnGameModeCounter(int limit)
