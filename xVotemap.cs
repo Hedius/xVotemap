@@ -1519,6 +1519,7 @@ namespace PRoConEvents
             this.ExecuteCommand("procon.protected.send", "vars.gameModeCounter");
 
             this.ExecuteCommand("procon.protected.tasks.add", "taskRunVotingLogic", "0", "5", "-1", "procon.protected.plugins.call", "xVotemap", "RunVotingLogic");
+            
 
             myvotes = new Dictionary<string, int>();
             //myvipvotes = new Dictionary<string, int>();
@@ -1537,6 +1538,7 @@ namespace PRoConEvents
             this.ExecuteCommand("procon.protected.tasks.remove", "taskRunVotingLogic");
             this.ExecuteCommand("procon.protected.tasks.remove", "taskDisplayNextMap");
             this.ExecuteCommand("procon.protected.tasks.remove", "taskDisplayVoteBanner");
+            this.ExecuteCommand("procon.protected.plugins.call", "CUltimateMapManager", "MapVoteStopped");
         }
 
         private void SetVoteStartAndEndTimes()
@@ -2002,6 +2004,8 @@ namespace PRoConEvents
 
                     this.ExecuteCommand("procon.protected.tasks.add", "taskDisplayVoteOptions", "6", m_iVotingOptionsInterval.ToString(), "-1", "procon.protected.plugins.call", "xVotemap", "DisplayVoteOptions", "all");
                 }
+                // inform UMM about the running vote
+                this.ExecuteCommand("procon.protected.plugins.call", "CUltimateMapManager", "MapVoteStarted");
                 WritePluginConsole("^bVoting poll: Started!", "Info", 3);
             }
             catch (Exception e)
