@@ -2965,5 +2965,12 @@ namespace PRoConEvents
                 }
             }
         }
+
+        private void LogEvent(String type, Hashtable logData)
+        {
+            String payload = JSON.JsonEncode(logData);
+            WritePluginConsole("Sent to EventLogger: " + payload, "Info", 3);
+            this.ExecuteCommand("procon.protected.plugins.call", "EventLogger", "SqlLog", type, "xVotemap", payload);
+        }
     }
 }
