@@ -2393,8 +2393,14 @@ namespace PRoConEvents
             WritePluginConsole("Displayed voting options", "Work", 4);
         }
 
+
         private void DisplayVoteResults()
         {
+            // hmmm... well a separate function would cause redundancy
+            Hashtable logData = new Hashtable{
+                {"timestamp", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")}
+            };
+
             int[] votes = new int[m_listMapOptions.Count];
             int vipvotes = 0;
 
@@ -2429,12 +2435,28 @@ namespace PRoConEvents
             {
                 double votingTurnout = Convert.ToDouble(m_dictVoting.Count) / Convert.ToDouble(m_iCurrPlayerCount);
                 WritePluginConsole("^bVoting Ended. " + votingTurnout.ToString("##0%") + " of the players voted.", "Info", 2);
+                logData["voting_turnout"] = votingTurnout;
             }
-
+	    else
+            {
+                logData["voting_turnout"] = -1;
+            }
+ 
+            ArrayList options = new ArrayList();
             for (int i = 0; i < m_listMapOptions.Count; i++)
             {
                 WritePluginConsole("^bVotes: ^6" + GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[i]) + "^0: " + votes[i], "Info", 2);
+                options.Add(
+                    new Hashtable{
+                        {"map_file_name", m_listMapOptions[i]},
+                        {"map", GetMapByFilename(m_listMapOptions[i]).PublicLevelName},
+                        {"mode", m_listGamemodeOptions[i]},
+                        {"mode_shorthand", ConvertGamemodeToShorthand(m_listGamemodeOptions[i])},
+                        {"votes", votes[i]}
+                    }
+                );
             }
+            logData["options"] = options;
 
             this.ExecuteCommand("procon.protected.send", "admin.say", "VOTING ENDED!", "all");
 
@@ -2460,6 +2482,16 @@ namespace PRoConEvents
                         this.ExecuteCommand("procon.protected.send", "admin.yell", mapandmode + " Won with " + winningPercent.ToString("###%") + " of the votes (" + votes[winner] + "/" + (m_dictVoting.Count + vipvotes) + ")", m_iBannerYellDuration.ToString(), "all");
                     }
 
+                    logData["event"] = "success";
+                    logData["winner"] = new Hashtable{
+                        {"map_file_name", m_listMapOptions[winner]},
+                        {"map", GetMapByFilename(m_listMapOptions[winner]).PublicLevelName},
+                        {"mode", m_listGamemodeOptions[winner]},
+                        {"mode_shorthand", ConvertGamemodeToShorthand(m_listGamemodeOptions[winner])},
+                        {"percent", winningPercent},
+                        {"votes", votes[winner]}
+                    };
+                    
                     //}
                     //else
                     //{
@@ -2485,6 +2517,25 @@ namespace PRoConEvents
             {
                 this.ExecuteCommand("procon.protected.send", "admin.say", "Votemap failed. The total number votes (" + (m_dictVoting.Count + vipvotes) + ") did not exceed the threshold (" + m_iVoteThres + ")", "all");
                 WritePluginConsole("^bVotemap failed^n. The total number votes (" + (m_dictVoting.Count + vipvotes) + ") did not exceed the threshold (" + m_iVoteThres + "), next map will not be changed.", "Info", 2);
+		// vote failed = winner = next map in map list
+                logData["event"] = "failed";
+                logData["winner"] = new Hashtable{
+                    {"map_file_name", m_listCurrMapList[this.m_iNextMapIndex].MapFileName},
+                    {"map", GetMapByFilename(m_listCurrMapList[this.m_iNextMapIndex].MapFileName).PublicLevelName},
+                    {"mode", m_listCurrMapList[this.m_iNextMapIndex].Gamemode},
+                    {"mode_shorthand", ConvertGamemodeToShorthand(m_listCurrMapList[this.m_iNextMapIndex].Gamemode)},
+                    {"percent", 0.0},
+                    {"votes", 0}
+                };
+
+            }
+            logData["total_votes"] = m_dictVoting.Count + vipvotes;
+
+	    // Send data to  EventLogger if wanted
+            if(this.logToEventLogger == enumBoolYesNo.Yes)
+            {
+                this.LogEvent("votemap_results", logData);
+                
             }
         }
 
