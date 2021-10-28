@@ -1301,7 +1301,7 @@ namespace PRoConEvents
 
             try
             {
-                WebClient wc = new WebClient();
+                WebClient client = new WebClient();
                 String response = client.DownloadString("https://gitlab.com/e4gl/xVotemap/-/raw/master/version.json");
                 Hashtable json = (Hashtable)JSON.JsonDecode(response);
 
@@ -1337,9 +1337,9 @@ namespace PRoConEvents
 
             if (GetPluginVersion().CompareTo(GetPluginVersion()) != 0)
             {
-                this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: ^b^2UPDATE " + latestversion + " AVAILABLE");
+                this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: ^b^2UPDATE " + latestVersion + " AVAILABLE");
                 this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: your version: " + GetPluginVersion());
-                this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: latest version " + latestversion);
+                this.ExecuteCommand("procon.protected.pluginconsole.write", "xVotemap: latest version " + latestVersion);
             }
             lastupdatecheck = DateTime.Now;
         }
