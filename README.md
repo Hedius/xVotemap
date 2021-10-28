@@ -4,10 +4,10 @@ E4GL's fork of the xVoteMap plugin for Battlefield servers. Originally released 
 
 
 ## Features
-* All features of the original xVoteMap
+* All features of the original xVoteMap.
 * Disable votemap for spectators. (New setting)
-* Log vote results to EventLogger
-* Integrates interfaces to fetch the vote status from other plugins
+* Log vote results to EventLogger.
+* Notifies the E4GL version of UltimateMapManager about vote events.
 
 # Credits
 Credits for the previous versions of this plugin: onegrizzlybeer/grizzlybeer, Hexacanon EG modification, Hand of Shadow, <= 1.3.1 by aether
