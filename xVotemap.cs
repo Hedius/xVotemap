@@ -26,6 +26,8 @@ using System.IO;
 using System.Text;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Collections;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Threading;
