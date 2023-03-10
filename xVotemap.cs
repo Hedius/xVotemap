@@ -31,7 +31,6 @@ using System.Collections;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Forms;
 //using System.Drawing;
 
 
@@ -1416,6 +1415,11 @@ namespace PRoConEvents
 
         }
 
+        public override void OnLoadingLevel(string mapFileName, int roundsPlayed, int roundsTotal) {
+            CMap map = GetMapByFilename(mapFileName);
+            OnLevelLoaded(mapFileName, map.GameMode, roundsPlayed, roundsTotal);
+        }
+
         public void OnLevelLoaded(string mapFileName, string Gamemode, int roundsPlayed, int roundsTotal)
         {
             //this.ExecuteCommand("procon.protected.pluginconsole.write", mapFileName + Gamemode + roundsPlayed.ToString() + roundsTotal.ToString());
@@ -1812,10 +1816,11 @@ namespace PRoConEvents
                             }
                         }
 
-                        string mapandmode = GetMapByFilename(m_listMapOptions[m_dictVoting[speaker]]).PublicLevelName;
+                        CMap map = GetMapByFilename(m_listMapOptions[m_dictVoting[speaker]]);
+                        string mapandmode = map.PublicLevelName;
                         if (m_enumShowGamemode == enumBoolYesNo.Yes)
                         {
-                            mapandmode += " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[m_dictVoting[speaker]]);
+                            mapandmode += " " + ConvertGamemodeToShorthand(map.GameMode);
                         }
 
                         if (this.confirmpub == enumBoolYesNo.Yes)
@@ -1829,7 +1834,7 @@ namespace PRoConEvents
                         {
                             this.ExecuteCommand("procon.protected.send", "admin.say", speaker + ": You voted for " + mapandmode, "player", speaker);
                         }
-                        WritePluginConsole("^7" + speaker + "^0 voted for ^6" + GetMapByFilename(m_listMapOptions[m_dictVoting[speaker]]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[m_dictVoting[speaker]]), "Info", 2);
+                        WritePluginConsole("^7" + speaker + "^0 voted for ^6" + map.PublicLevelName + " " + ConvertGamemodeToShorthand(map.GameMode), "Info", 2);
                     }
                     else
                     {
@@ -1841,18 +1846,19 @@ namespace PRoConEvents
                     int vote = Convert.ToInt32(match.Groups[m_strHosVotePrefix.Length].Value);
                     if (vote > 0 && vote <= m_listMapOptions.Count)
                     {
-                        if (m_dictVoting[speaker] != vote - 1)
-                        {
-                            string mapandmode0 = GetMapByFilename(m_listMapOptions[m_dictVoting[speaker]]).PublicLevelName;
-                            string mapandmode1 = GetMapByFilename(m_listMapOptions[vote - 1]).PublicLevelName;
+                        if (m_dictVoting[speaker] != vote - 1) {
+                            CMap map0 = GetMapByFilename(m_listMapOptions[m_dictVoting[speaker]]);
+                            CMap map1 = GetMapByFilename(m_listMapOptions[vote - 1]);
+                            string mapandmode0 = map0.PublicLevelName;
+                            string mapandmode1 = map1.PublicLevelName;
                             if (m_enumShowGamemode == enumBoolYesNo.Yes)
                             {
-                                mapandmode0 += " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[m_dictVoting[speaker]]);
-                                mapandmode1 += " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[vote - 1]);
+                                mapandmode0 += " " + ConvertGamemodeToShorthand(map0.GameMode);
+                                mapandmode1 += " " + ConvertGamemodeToShorthand(map1.GameMode);
                             }
 
                             this.ExecuteCommand("procon.protected.send", "admin.say", speaker + ": You changed your vote from " + mapandmode0 + " to " + mapandmode1, "player", speaker);
-                            WritePluginConsole("^7" + speaker + "^0 changed their vote from ^6" + GetMapByFilename(m_listMapOptions[m_dictVoting[speaker]]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[m_dictVoting[speaker]]) + "^0 to ^6" + GetMapByFilename(m_listMapOptions[vote - 1]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[vote - 1]), "Info", 2);
+                            WritePluginConsole("^7" + speaker + "^0 changed their vote from ^6" + map0.PublicLevelName + " " + ConvertGamemodeToShorthand(map0.GameMode) + "^0 to ^6" + map1.PublicLevelName + " " + ConvertGamemodeToShorthand(map1.GameMode), "Info", 2);
 
                             m_dictVoting[speaker] = vote - 1;
 
@@ -1864,12 +1870,12 @@ namespace PRoConEvents
                                 myvotes.Add(speaker, vote);
                             }
                         }
-                        else
-                        {
-                            string mapandmode = GetMapByFilename(m_listMapOptions[m_dictVoting[speaker]]).PublicLevelName;
+                        else {
+                            CMap map = GetMapByFilename(m_listMapOptions[m_dictVoting[speaker]]);
+                            string mapandmode = map.PublicLevelName;
                             if (m_enumShowGamemode == enumBoolYesNo.Yes)
                             {
-                                mapandmode += " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[m_dictVoting[speaker]]);
+                                mapandmode += " " + ConvertGamemodeToShorthand(map.GameMode);
                             }
                             this.ExecuteCommand("procon.protected.send", "admin.say", speaker + ": You have already voted for " + mapandmode, "player", speaker);
                         }
@@ -2199,7 +2205,7 @@ namespace PRoConEvents
                         m_listMapOptions.Add(tempMaplist[newSelection[i]].MapFileName);
                         m_listGamemodeOptions.Add(tempMaplist[newSelection[i]].Gamemode);
 
-                        mapnames += "^6" + GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[i]) + "^0 | ";
+                        mapnames += "^6" + GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[i]).GameMode) + "^0 | ";
                     }
 
                     WritePluginConsole("^bVotemap Options: " + mapnames.Substring(0, mapnames.Length - 3), "Info", 2);
@@ -2323,7 +2329,7 @@ namespace PRoConEvents
                     {
                         if (m_enumShowGamemode == enumBoolYesNo.Yes)
                         {
-                            strNamenMode = GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[i]);
+                            strNamenMode = GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[i]).GameMode);
                             padding = GeneratePadding(strNamenMode, iChatMiddle);
                         }
                         else
@@ -2345,7 +2351,7 @@ namespace PRoConEvents
                     {
                         if (m_enumShowGamemode == enumBoolYesNo.Yes)
                         {
-                            strNamenMode = GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[i]);
+                            strNamenMode = GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[i]).GameMode);
                         }
                         else
                         {
@@ -2449,13 +2455,13 @@ namespace PRoConEvents
             ArrayList options = new ArrayList();
             for (int i = 0; i < m_listMapOptions.Count; i++)
             {
-                WritePluginConsole("^bVotes: ^6" + GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[i]) + "^0: " + votes[i], "Info", 2);
+                WritePluginConsole("^bVotes: ^6" + GetMapByFilename(m_listMapOptions[i]).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[i]).GameMode) + "^0: " + votes[i], "Info", 2);
                 options.Add(
                     new Hashtable{
                         {"map_file_name", m_listMapOptions[i]},
                         {"map", GetMapByFilename(m_listMapOptions[i]).PublicLevelName},
                         {"mode", m_listGamemodeOptions[i]},
-                        {"mode_shorthand", ConvertGamemodeToShorthand(m_listGamemodeOptions[i])},
+                        {"mode_shorthand", ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[i]).GameMode)},
                         {"votes", votes[i]}
                     }
                 );
@@ -2471,7 +2477,7 @@ namespace PRoConEvents
                     string mapandmode = GetMapByFilename(m_listMapOptions[winner]).PublicLevelName;
                     if (m_enumShowGamemode == enumBoolYesNo.Yes)
                     {
-                        mapandmode += " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[winner]);
+                        mapandmode += " " + ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[winner]).GameMode);
                     }
 
                     //if (votes[winner] <= m_dictVoting.Count)
@@ -2491,7 +2497,7 @@ namespace PRoConEvents
                         {"map_file_name", m_listMapOptions[winner]},
                         {"map", GetMapByFilename(m_listMapOptions[winner]).PublicLevelName},
                         {"mode", m_listGamemodeOptions[winner]},
-                        {"mode_shorthand", ConvertGamemodeToShorthand(m_listGamemodeOptions[winner])},
+                        {"mode_shorthand", ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[winner]).GameMode)},
                         {"percent", winningPercent},
                         {"votes", votes[winner]}
                     };
@@ -2502,11 +2508,11 @@ namespace PRoConEvents
                     //this.ExecuteCommand("procon.protected.send", "admin.say", mapandmode + " Won with " + winningPercent.ToString("###%") + " of the votes (" + votes[winner] + "/" + votes[winner] + ")", "all");
                     //}
                 }
-                WritePluginConsole("^b^6" + GetMapByFilename(m_listMapOptions[winner]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[winner]) + "^0 Won", "Info", 1);
+                WritePluginConsole("^b^6" + GetMapByFilename(m_listMapOptions[winner]).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[winner]).GameMode) + "^0 Won", "Info", 1);
 
 
                 m_strNextMap = GetMapByFilename(m_listMapOptions[winner]).PublicLevelName;
-                m_strNextMode = ConvertGamemodeToShorthand(m_listGamemodeOptions[winner]);
+                m_strNextMode = ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[winner]).GameMode);
                 if (m_iNextMapDisplayInterval > 0)
                 {
                     this.ExecuteCommand("procon.protected.tasks.add", "taskDisplayNextMap", "90", m_iNextMapDisplayInterval.ToString(), "-1", "procon.protected.plugins.call", "xVotemap", "DisplayNextMap", "all");
@@ -2609,6 +2615,7 @@ namespace PRoConEvents
                     return "[CL]";
                 case "ConquestLarge0":
                 case "CONQUEST":
+                case "Levels/MP_009CQ":
                     //return "[CQ-L]";
                     return "[CQ]";
                 case "ConquestSmall0":
@@ -2905,7 +2912,7 @@ namespace PRoConEvents
             if (draws.Count > 1)
             {
                 maxIndex = draws[RandomNumber(0, draws.Count)];
-                WritePluginConsole("Winning vote tie, ^6" + GetMapByFilename(m_listMapOptions[maxIndex]).PublicLevelName + " " + ConvertGamemodeToShorthand(m_listGamemodeOptions[maxIndex]) + "^0 randomly selected as winner.", "Info", 3);
+                WritePluginConsole("Winning vote tie, ^6" + GetMapByFilename(m_listMapOptions[maxIndex]).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(m_listMapOptions[maxIndex]).GameMode) + "^0 randomly selected as winner.", "Info", 3);
             }
 
             return maxIndex;
