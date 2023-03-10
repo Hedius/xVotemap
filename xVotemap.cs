@@ -1550,7 +1550,7 @@ namespace PRoConEvents
             try
             {
                 int winningScore = 0;
-                if (m_strCurrentGameMode.ToLower().Contains("conquest") || m_strCurrentGameMode.Contains("DeathMatch") || m_strCurrentGameMode.Contains("Domination") || m_strCurrentGameMode.Contains("Superiority") || m_strCurrentGameMode.Contains("Scavenger") || m_strCurrentGameMode.Contains("Obliteration") || m_strCurrentGameMode.Contains("Chainlink0") || m_strCurrentGameMode.Contains("SQDM"))
+                if (m_strCurrentGameMode.ToLower().Contains("conquest") || m_strCurrentGameMode.ToLower().Contains("deathmatch") || m_strCurrentGameMode.Contains("Domination") || m_strCurrentGameMode.Contains("Superiority") || m_strCurrentGameMode.Contains("Scavenger") || m_strCurrentGameMode.Contains("Obliteration") || m_strCurrentGameMode.Contains("Chainlink0") || m_strCurrentGameMode.Contains("SQDM"))
                 {
 
 
@@ -1558,7 +1558,7 @@ namespace PRoConEvents
                     {
                         winningScore = ticketCounter;
                     }
-                    else if (m_strCurrentGameMode.Contains("SquadDeathMatch"))
+                    else if (m_strCurrentGameMode.ToLower().Contains("squad deathmatch") || m_strCurrentGameMode.Contains("SQDM"))
                     {
                         winningScore = ticketCounter / 2;
                     }
