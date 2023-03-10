@@ -1378,10 +1378,10 @@ namespace PRoConEvents
             this.m_iCurrMapIndex = mapIndex;
             this.m_iNextMapIndex = nextIndex;
 
-            if (this.m_strNextMap == "")
-            {
-                this.m_strNextMap = GetMapByFilename(m_listCurrMapList[nextIndex].MapFileName).PublicLevelName;
-                this.m_strNextMode = ConvertGamemodeToShorthand(m_listCurrMapList[nextIndex].Gamemode);
+            if (this.m_strNextMap == "") {
+                CMap map = GetMapByFilename(m_listCurrMapList[nextIndex].MapFileName);
+                this.m_strNextMap = map.PublicLevelName;
+                this.m_strNextMode = ConvertGamemodeToShorthand(map.GameMode);
             }
         }
 
@@ -2063,14 +2063,14 @@ namespace PRoConEvents
                     {
                         if (tempMaplist[i].MapFileName == m_strCurrentMap && m_enumExcludeCurrMap == enumBoolYesNo.Yes)
                         {
-                            WritePluginConsole("^6" + GetMapByFilename(tempMaplist[i].MapFileName).PublicLevelName + " " + ConvertGamemodeToShorthand(tempMaplist[i].Gamemode) + "^0 was removed from maplistoptions.", "Info", 3);
+                            WritePluginConsole("^6" + GetMapByFilename(tempMaplist[i].MapFileName).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(tempMaplist[i].MapFileName).GameMode) + "^0 was removed from maplistoptions.", "Info", 3);
                             tempMaplist.RemoveAt(i);
                             //if (!mapstoremove.Contains(i))
                             //    mapstoremove.Add(i);
                         }
                         else if (tempMaplist[i].Gamemode == m_strCurrentGameMode && m_enumExcludeCurrMode == enumBoolYesNo.Yes)
                         {
-                            WritePluginConsole("^6" + GetMapByFilename(tempMaplist[i].MapFileName).PublicLevelName + " " + ConvertGamemodeToShorthand(tempMaplist[i].Gamemode) + "^0 was removed from maplistoptions.", "Info", 3);
+                            WritePluginConsole("^6" + GetMapByFilename(tempMaplist[i].MapFileName).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(tempMaplist[i].MapFileName).GameMode) + "^0 was removed from maplistoptions.", "Info", 3);
                             tempMaplist.RemoveAt(i);
                             //if (!mapstoremove.Contains(i))
                             //    mapstoremove.Add(i);
@@ -2271,7 +2271,7 @@ namespace PRoConEvents
 
                 for (int j = 0; j < origMaplist.Count; j++)
                 {
-                    WritePluginConsole("Sorted: " + j.ToString() + " ^6" + GetMapByFilename(origMaplist[j].MapFileName).PublicLevelName + " " + ConvertGamemodeToShorthand(origMaplist[j].Gamemode), "Info", 4);
+                    WritePluginConsole("Sorted: " + j.ToString() + " ^6" + GetMapByFilename(origMaplist[j].MapFileName).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(origMaplist[j].MapFileName).GameMode), "Info", 4);
                 }
 
                 WritePluginConsole("SortMapList: Done!", "Info", 4);
@@ -2533,7 +2533,7 @@ namespace PRoConEvents
                     {"map_file_name", m_listCurrMapList[this.m_iNextMapIndex].MapFileName},
                     {"map", GetMapByFilename(m_listCurrMapList[this.m_iNextMapIndex].MapFileName).PublicLevelName},
                     {"mode", m_listCurrMapList[this.m_iNextMapIndex].Gamemode},
-                    {"mode_shorthand", ConvertGamemodeToShorthand(m_listCurrMapList[this.m_iNextMapIndex].Gamemode)},
+                    {"mode_shorthand", ConvertGamemodeToShorthand(GetMapByFilename(m_listCurrMapList[this.m_iNextMapIndex].MapFileName).GameMode)},
                     {"percent", 0.0},
                     {"votes", 0}
                 };
