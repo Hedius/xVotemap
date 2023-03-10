@@ -27,7 +27,7 @@ Please submit your changes by creating a pull request.
 All changes by Hedius and E4GL are licensed under the **GPLv3**.
 
 ```
-Copyright (C) 2021. Hedius gitlab.com/hedius
+Copyright (C) 2023. Hedius gitlab.com/hedius
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

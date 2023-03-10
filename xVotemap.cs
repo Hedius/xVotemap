@@ -5,7 +5,7 @@ Original authors: onegrizzlybeer/grizzlybeer, Hexacanon EG modification, Hand of
 Maintainer: Hedius
 License for all changes made by H3dius: Version: >= 1.5.7.0
 
-Copyright (C) 2020. Hedius gitlab.com/hedius
+Copyright (C) 2023. Hedius gitlab.com/hedius
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -431,7 +431,7 @@ namespace PRoConEvents
 
         public string GetPluginVersion()
         {
-            return "1.5.9.0";
+            return "1.5.10";
         }
 
         public string GetPluginAuthor()
