@@ -2615,7 +2615,7 @@ namespace PRoConEvents
                     return "[CL]";
                 case "ConquestLarge0":
                 case "CONQUEST":
-                case "Levels/MP_009CQ":
+                case "Conquest":
                     //return "[CQ-L]";
                     return "[CQ]";
                 case "ConquestSmall0":
@@ -2632,11 +2632,14 @@ namespace PRoConEvents
                     return "[CQ]";
                 case "RushLarge0":
                 case "RUSH":
+                case "Rush":
                     return "[R]";
                 case "SquadRush0":
                 case "SQRUSH":
+                case "Squadrush":
                     return "[SQR]";
                 case "SquadDeathMatch0":
+                case "Squad Deathmatch":
                 case "SQDM":
                     return "[SQDM]";
                 case "TeamDeathMatch0":
