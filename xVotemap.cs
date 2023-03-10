@@ -1546,7 +1546,7 @@ namespace PRoConEvents
             try
             {
                 int winningScore = 0;
-                if (m_strCurrentGameMode.Contains("Conquest") || m_strCurrentGameMode.Contains("DeathMatch") || m_strCurrentGameMode.Contains("Domination") || m_strCurrentGameMode.Contains("Superiority") || m_strCurrentGameMode.Contains("Scavenger") || m_strCurrentGameMode.Contains("Obliteration") || m_strCurrentGameMode.Contains("Chainlink0"))
+                if (m_strCurrentGameMode.ToLower().Contains("conquest") || m_strCurrentGameMode.Contains("DeathMatch") || m_strCurrentGameMode.Contains("Domination") || m_strCurrentGameMode.Contains("Superiority") || m_strCurrentGameMode.Contains("Scavenger") || m_strCurrentGameMode.Contains("Obliteration") || m_strCurrentGameMode.Contains("Chainlink0") || m_strCurrentMap.Contains("SQDM"))
                 {
 
 
@@ -1691,7 +1691,7 @@ namespace PRoConEvents
                         //}
                     }
                 }
-                else if (m_strCurrentGameMode.Contains("Rush") || m_strCurrentGameMode.Contains("GunMaster") || m_strCurrentGameMode.Contains("Capture") || m_strCurrentGameMode.Contains("Elimination"))
+                else if (m_strCurrentGameMode.ToLower().Contains("rush") || m_strCurrentGameMode.Contains("GunMaster") || m_strCurrentGameMode.Contains("Capture") || m_strCurrentGameMode.Contains("Elimination"))
                 {
 
                     //if (m_iPrevTicket != null && m_iPrevTicket[0] != -1 && m_listCurrTeamScore != null && m_listCurrTeamScore.Count > 0)
