@@ -2593,7 +2593,7 @@ namespace PRoConEvents
             int index = 0;
             for (int i = 0; i < m_listCurrMapList.Count; i++)
             {
-                if (m_listCurrMapList[i].MapFileName.CompareTo(mapName) == 0) //&& m_listCurrMapList[i].Gamemode.CompareTo(gamemode) == 0)
+                if (m_listCurrMapList[i].MapFileName.ToLower().CompareTo(mapName.ToLower()) == 0) //&& m_listCurrMapList[i].Gamemode.CompareTo(gamemode) == 0)
                 {
                     index = i;
                     WritePluginConsole("Map found in current maplist: " + index, "Info", 5);
