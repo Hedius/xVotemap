@@ -1423,7 +1423,7 @@ namespace PRoConEvents
         public void OnLevelLoaded(string mapFileName, string Gamemode, int roundsPlayed, int roundsTotal)
         {
             //this.ExecuteCommand("procon.protected.pluginconsole.write", mapFileName + Gamemode + roundsPlayed.ToString() + roundsTotal.ToString());
-            WritePluginConsole("Level loaded: ^6" + GetMapByFilename(mapFileName).PublicLevelName + " " + ConvertGamemodeToShorthand(Gamemode) + "^0, Round " + (roundsPlayed + 1).ToString() + " of " + roundsTotal.ToString(), "Info", 3);
+            WritePluginConsole("Level loaded: ^6" + GetMapByFilename(mapFileName).PublicLevelName + " " + ConvertGamemodeToShorthand(GetMapByFilename(mapFileName).GameMode) + "^0, Round " + (roundsPlayed + 1).ToString() + " of " + roundsTotal.ToString(), "Info", 3);
             if (roundsPlayed + 1 == roundsTotal || roundsTotal == 0)
             {
                 this.m_boolOnLastRound = true;
@@ -1438,14 +1438,14 @@ namespace PRoConEvents
 
             for (int i = 0; i < m_listPastMaps.Count; i++)
             {
-                if (m_listPastMaps[i].MapFileName == mapFileName && m_listPastMaps[i].Gamemode == Gamemode)
+                if (m_listPastMaps[i].MapFileName == mapFileName) // && m_listPastMaps[i].Gamemode == Gamemode)
                 {
                     WritePluginConsole("Map and mode found in played maplist. Removing.", "Work", 5);
                     m_listPastMaps.RemoveAt(i);
                     break;
                 }
             }
-            m_listPastMaps.Add(new MaplistEntry(Gamemode, mapFileName, roundsTotal));
+            m_listPastMaps.Add(new MaplistEntry(GetMapByFilename(mapFileName).GameMode, mapFileName, roundsTotal));
 
         }
 
@@ -1550,7 +1550,7 @@ namespace PRoConEvents
             try
             {
                 int winningScore = 0;
-                if (m_strCurrentGameMode.ToLower().Contains("conquest") || m_strCurrentGameMode.ToLower().Contains("deathmatch") || m_strCurrentGameMode.Contains("Domination") || m_strCurrentGameMode.Contains("Superiority") || m_strCurrentGameMode.Contains("Scavenger") || m_strCurrentGameMode.Contains("Obliteration") || m_strCurrentGameMode.Contains("Chainlink0") || m_strCurrentGameMode.Contains("SQDM"))
+                if (m_strCurrentGameMode.ToLower().Contains("conquest") || m_strCurrentGameMode.ToLower().Contains("deathmatch") || m_strCurrentGameMode.Contains("Domination") || m_strCurrentGameMode.Contains("Superiority") || m_strCurrentGameMode.Contains("Scavenger") || m_strCurrentGameMode.Contains("Obliteration") || m_strCurrentGameMode.Contains("Chainlink0") || m_strCurrentGameMode.ToLower().Contains("sqdm"))
                 {
 
 
@@ -2593,7 +2593,7 @@ namespace PRoConEvents
             int index = 0;
             for (int i = 0; i < m_listCurrMapList.Count; i++)
             {
-                if (m_listCurrMapList[i].MapFileName.CompareTo(mapName) == 0 && m_listCurrMapList[i].Gamemode.CompareTo(gamemode) == 0)
+                if (m_listCurrMapList[i].MapFileName.CompareTo(mapName) == 0) //&& m_listCurrMapList[i].Gamemode.CompareTo(gamemode) == 0)
                 {
                     index = i;
                     WritePluginConsole("Map found in current maplist: " + index, "Info", 5);
