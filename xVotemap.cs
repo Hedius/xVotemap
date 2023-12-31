@@ -5,7 +5,7 @@ Original authors: onegrizzlybeer/grizzlybeer, Hexacanon EG modification, Hand of
 Maintainer: Hedius
 License for all changes made by H3dius: Version: >= 1.5.7.0
 
-Copyright (C) 2023. Hedius gitlab.com/hedius
+Copyright (C) 2023. Hedius github.com/hedius
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -441,7 +441,7 @@ namespace PRoConEvents
 
         public string GetPluginWebsite()
         {
-            return "gitlab.com/e4gl/xVotemap";
+            return "github.com/Hedius/xVotemap";
         }
 
         public string GetPluginDescription()
@@ -1302,14 +1302,14 @@ namespace PRoConEvents
             try
             {
                 WebClient client = new WebClient();
-                String response = client.DownloadString("https://gitlab.com/e4gl/xVotemap/-/raw/master/version.json");
+                String response = client.DownloadString("https://raw.githubusercontent.com/Hedius/xVotemap/master/version.json");
                 Hashtable json = (Hashtable)JSON.JsonDecode(response);
 
 
                 if (json == null)
                 {
                     this.ExecuteCommand("procon.protected.pluginconsole.write",
-                                        "Update check failed - gitlab.com/e4gl/xVotemap is private! Please contact the maintainer!");
+                                        "Update check failed - github.com/Hedius/xVotemap is private! Please contact the maintainer!");
 
                     return;
                 }
